@@ -1,6 +1,35 @@
-# (c) James Marsden - Sep 27, 2020
+# (c) James Marsden (RJM) - Written by
 #
+# File Name   : roadRace.py
 #
+# Description : Implements the main game logic
+#
+# Amendment History
+# -----------------------------------------------------------------------------
+#
+# 20191020-01 Created original file               James Marsden   20-Oct-2019
+#                                                 (RJM)
+#
+# 20191219-01 Updated for key polling logic       James Marsden   16-Dec-2019
+#                                                 (RJM)
+#
+# 20192020-01 More work on keystrokes routine     James Marsden   20-Dec-2019
+#                                                 (RJM)
+# 
+# 20192021-01 Refined care movement + keystrokes  James Marsden   21-Dec-2019
+#                                                 (RJM)
+# 
+# 20192025-01 Added getSign to replicate the SGN  James Marsden   25-Dec-2019
+#             func from ZX81 BASIC                (RJM)
+#
+# 20200107-01 Various improvements incindlug      James Marsden   07-Jan-2020
+#             adding captureRoad to help with     (RJM)
+#             collision detection.  Also added   
+#             hi score logic etc.
+#
+# 20200927-01 Updated ver history                 James Marsden  27-Sep-2020
+#                                                 (RJM)
+# 
 
 import os
 import random
