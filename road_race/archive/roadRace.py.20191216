@@ -1,0 +1,147 @@
+import os
+import random
+import time
+import threading
+import getCh
+
+class RoadRace ():
+
+    def __init__ (self):
+        self.myLineCount      = 1
+        self.myScore          = 0
+        self.myOtherCar       = False
+        self.myOtherCarOffset = 0
+        self.myStillAlive     = True
+        self.myRoadOffset     = 0
+
+        # What do these do - TCB
+        self.myVarA      = 38 # Code (" ")
+        self.myVarF      = self.myVarA
+        self.myVarB      = 24 # Code "+" # The location of the road print
+        self.myVarN      = 3  # Code G7"
+
+        # Location variables are X & Y - X being up / down & Y is left right
+        # Z is the previous value of Y
+        self.myVarX      = 9 # Code GH - location is 9 rows down
+        self.myVarY      = self.myVarX
+        self.myVarZ      = self.myVarY
+
+
+    def startRace (self):
+        myKeyThread  = threading.Thread (target = self.getKey (), daemon = True)
+        print ("Starting up threads...")
+        myKeyThread.start ()
+
+        print ("Start race!")
+
+        while (self.myStillAlive == True):
+            self.randomizeRoadLeftRight ()
+            #self.captureKeyLeftRight ()
+            self.addCarsToRoad()
+            self.printScore ()
+            self.printMyCar ()
+            self.printRoad ()
+            self.checkCollision ()
+            time.sleep (1)
+
+        return
+
+    def randomizeRoadLeftRight (self):
+        # line 90
+        myRandNo     = random.randrange(0,100)
+        myRandOffSet = random.randrange(0,3)
+
+        if myRandNo < 45:
+            self.myRoadOffset = myRandOffSet * -1
+        elif myRandNo > 60:
+            self.myRoadOffset = myRandOffSet
+        else:
+            self.myRoadOffset = 0
+
+        return
+
+    def captureKeyLeftRight (self, myKeyStroke):
+        # line 110
+
+        if myKeyStroke  == "o":
+            print ("Left Key")
+            self.myVarY = self.myVarY - 1
+
+        if myKeyStroke  == "p":
+            print ("Right Key")
+            self.myVarY = self.myVarY + 1
+
+        return
+
+    def getKey (self):
+        while (True):
+            key = getCh.getch()
+
+            if (key == "Q"):
+                break
+
+            self.captureKeyLeftRight (key)
+
+        return
+
+    def addCarsToRoad (self):
+        # line 120
+        # IF RND > .8 THEN PRINT AT B-C, N + INT (RND * 3 + C); "H"
+        myRandNo = random.randrange(0,100000000)
+        myRandOffSet = random.randrange(0,6)
+
+        if myRandNo > 80000000:
+            self.myOtherCar       = True
+            self.myOtherCarOffset = myRandOffSet + 1 + 4
+        else:
+            self.myOtherCar       = False
+            self.myOtherCarOffset = 0
+
+        return
+
+    def printRoad (self):
+        # line 130
+        # PRINT AT B, N-C; "XX____XX"; AT X,Y "H"; AT X-C,Z; "_"; AT X+C,Y
+        # LET F = F + C
+        myTmpOffset = 4 - self.myRoadOffset
+        myRoadBlock = chr (32) * myTmpOffset
+
+        myRoadBlock = myRoadBlock + (chr (9608) * 4 + chr(9618) * 8 + chr (9608) * 4)
+
+        if self.myOtherCar == True:
+            myNewRoadBlock = "".join((myRoadBlock[:myTmpOffset + self.myOtherCarOffset],"H",myRoadBlock[myTmpOffset + self.myOtherCarOffset+1:]))
+        else:
+            myNewRoadBlock = myRoadBlock
+
+        self.printAtLoc (self.myVarB, 1, myNewRoadBlock)
+
+        return
+
+    def checkCollision (self):
+        # line 150 & 160
+        # LET W = PEEK (PEEK 16398 + PEEK 16399 * 256)
+        # IF W <> CODE ("Block") AND W <> CODE ("H") THEN GOTO 80
+
+        self.myScore = self.myScore + 10
+
+        return
+
+    def printMyCar (self):
+        # line 130
+        # PRINT AT X-1,Y; "_"
+        # PRINT AT X,Y; "H"
+        self.printAtLoc (self.myVarX - 1, self.myVarY, chr(9618))
+        self.printAtLoc (self.myVarX, self.myVarY, "H")
+
+        return
+
+    def printAtLoc (self, myXLoc, myYLoc, myPrintStr):
+        print ("\033["+str (myXLoc)+";"+str (myYLoc)+"H"+ myPrintStr)
+
+        return
+
+    def printScore (self):
+        # The original game doesn't do this until the end
+        self.printAtLoc (2, 40, "My Score : " + str (self.myScore))
+
+        return

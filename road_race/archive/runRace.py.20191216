@@ -1,0 +1,29 @@
+#! /home/gloss/util/python3
+
+import os
+import roadRace
+import getKeyStrokes
+import threading
+
+def runRace ():
+    print ("Setting up threads...")
+    myRoadRace = roadRace.RoadRace ()
+    myKeyStroke = getKeyStrokes.getKeyStrokes (myRoadRace)
+
+    # The chKey method locks the processing flow until a key is pressed
+    # so we need in a different thread.
+
+    print ("Setting target...")
+    myKeyThread      = threading.Thread (target = myKeyStroke.getKey (), daemon = True)
+    #myRoadRaceThread = threading.Thread (target = myRoadRace.startRace ())
+
+    print ("Starting up threads...")
+    myKeyThread.start ()
+    myRoadRaceThread.start ()
+
+    return
+
+if __name__ == "__main__":
+    runRace ()
+    exit (0)
+
