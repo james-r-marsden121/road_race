@@ -1,3 +1,7 @@
+# (c) James Marsden - Sep 27, 2020
+#
+#
+
 import os
 import random
 import time
